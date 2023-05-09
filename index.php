@@ -22,7 +22,7 @@
         onclick="openForm()">Chat</button>
 
 <div class="chat-popup w-400 p-5 shadow rounded" id="myForm">
-  <form method="post" 
+  <form method="post" target="_blank" 
               action="app/http/request.php">
             <div class = "d-flex
                           justify-content-center

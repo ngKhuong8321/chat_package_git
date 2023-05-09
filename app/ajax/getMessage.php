@@ -1,9 +1,9 @@
- <?php 
+<?php 
 # database connection file
 include 'C:\xampp\htdocs\dashboard\chat_package\app/db_conn.php';
 
-$room_id = $_POST['room_id'];
 $user_id = $_POST['user_id'];
+$room_id = $_POST['room_id'];
 
 $sql = "SELECT * FROM conversations
                  WHERE room_id=?
@@ -25,6 +25,20 @@ $sql = "SELECT * FROM conversations
 	    		$stmt2 = $conn->prepare($sql2);
 	            $stmt2->execute([$opened, $room_id]); 
 
+				if($chat['is_img'])
+				{ ?>
+
+				<p class="ltext border 
+					         rounded p-2 mb-1">
+						    <img style="padding: 10px 10px 10px 10px;" onclick="viewImage(this)" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($chat['img'])?>" width= "100%" object-fit = "contain"/>
+						    <small class="d-block">
+						    	<?=$chat['created_at']?>
+						    </small>      	
+						</p>
+
+				<?php
+
+				} else {
 	            ?>
                   <p class="ltext border 
 					        rounded p-2 mb-1">
@@ -33,7 +47,7 @@ $sql = "SELECT * FROM conversations
 					    	<?=$chat['created_at']?>
 					    </small>      	
 				  </p>        
-	            <?php
+	            <?php }
 	    	}
 	    }
     }else {
