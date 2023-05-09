@@ -1,0 +1,190 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Button used to open the chat form - fixed at the bottom of the page */
+.livechat-button {
+    cursor: pointer;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 280px;
+}
+
+/* The popup chat - hidden by default */
+.chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    background: #fff;
+}
+
+/* Add styles to the form container */
+.form-container {
+    max-width: 300px;
+    padding: 10px;
+    background-color: white;
+}
+
+/* Full-width textarea */
+.form-container textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+    resize: none;
+    min-height: 200px;
+}
+
+/* When the textarea gets focus, do something */
+.form-container textarea:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+/* Set a style for the submit/send button */
+.form-container .btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+    background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover,
+.open-button:hover {
+    opacity: 1;
+}
+
+.vh-100 {
+    min-height: 10vh;
+}
+
+.vh-max100 {
+    max-height: 100px;
+}
+
+.w-fs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.w-400 {
+    width: 400px;
+}
+
+.w-800 {
+    width: 800;
+}
+
+.fs-xs {
+    font-size: 1rem;
+}
+
+.w-avt {
+    width: 5%;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.fs-big {
+    font-size: 5rem !important;
+}
+
+.online {
+    width: 10px;
+    height: 10px;
+    background: green;
+    border-radius: 50%;
+}
+
+.w-15 {
+    width: 10%;
+}
+
+.fs-sm {
+    font-size: 1.4rem;
+}
+
+small {
+    color: #bbb;
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+.chat-box {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 70vh;
+}
+
+.rtext {
+    width: 40%;
+    background: #f8f9fa;
+    color: #444;
+}
+
+.ltext {
+    width: 40%;
+    background: #3289c8;
+    color: #fff;
+}
+
+/* width */
+*::-webkit-scrollbar {
+    width: 3px;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+    background: #aaa;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+    background: #3289c8;
+}
+
+textarea {
+    resize: none;
+}
+
+/*message_status*/
+
+/* required field*/
+.required-field::after {
+    content: "*";
+    color: red;
+}
