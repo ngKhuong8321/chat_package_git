@@ -127,7 +127,7 @@
 
 <body class="main">
              <div class="header">
-                <button onclick="history.back()" class="btn btn-primary icon">&#xf104;</button>
+                <button onclick="history.back()" class="btn btn-secondary icon">&#xf104; Back</button>
                 <div class="header-right">
                 <a href="#home">Home</a>
                 <a target="_blank" href="https://mybk.hcmut.edu.vn/my/">MyBK</a>

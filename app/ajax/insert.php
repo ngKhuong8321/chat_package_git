@@ -28,8 +28,7 @@ $sql = "INSERT INTO
    $time = date("Y-m-d H:i:s");
    ?>
 
-    <p class="rtext align-self-end
-                                    border rounded p-2 mb-1">
+    <p class="rtext align-self-end  border rounded p-2 mb-1"  style="word-wrap:break-word;">
                                 <?=$message?> 
                                 <small class="d-block">
                                     <?=$time?>

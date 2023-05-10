@@ -5,16 +5,18 @@
     include 'app/http/chat.php';
     include 'app/helper/isAdmin.php';
     include 'app/helper/getUsername.php';
+    include 'app/http/get_forms.php';
 
     $chats = getChats($_GET["room_id"], $conn);
     $is_admin = isAdmin($_GET["user_id"], $conn);
     $user_name = getName($_GET["user_id"], $conn);
+    $forms = getForms($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat Window</title>
+    <title>Chat: <?php echo $user_name;?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -124,12 +126,20 @@
     text-decoration: none;
     cursor: pointer;
     }
+
+    /*Scrollable Dropup List Styling */
+    .scrollable-menu {
+        height: auto;
+        max-height: 200px;
+        overflow-x: hidden;
+    }
     </style>
 </head>
 <body>
 
   <div class="header">
-    <img src="img/logo.png" height= "50vh">
+    <!-- is_admin == true -->
+    <button id="solved" class="btn btn-danger icon">&#xf104; Thoát</button>
     <div class="header-right">
       <a href="#home">Home</a>
       <a target="_blank" href="https://mybk.hcmut.edu.vn/my/">MyBK</a>
@@ -140,7 +150,8 @@
 
         <div class="d-flex align-items-center">
             <img src="img/user-default.png"
-                 class = "w-15 rounded-circle">
+                 class = "rounded-circle"
+                 height = "75vh">
             <h2 style = "display: inline-block;"><?php echo "Room ID: ".$_GET["room_id"]?></h2>
         </div>
 
@@ -157,7 +168,7 @@
                      	{ 
                             if (!$chat['is_img']) {?>
 						<p class="rtext align-self-end
-						        border rounded p-2 mb-1">
+						        border rounded p-2 mb-1" style="word-wrap:break-word;">
 						    <?=$chat['msg']?> 
 						    <small class="d-block">
 						    	<?=$chat['created_at']?>
@@ -166,7 +177,7 @@
                     <?php }else{
                         ?>
 						<p class="rtext align-self-end
-						        border rounded p-2 mb-1">
+						        border rounded p-2 mb-1" style="word-wrap:break-word;">
 						    <img style="padding: 10px 10px 10px 10px;" onclick="viewImage(this)" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($chat['img'])?>" width= "100%" object-fit = "contain"/>
 						    <small class="d-block">
 						    	<?=$chat['created_at']?>
@@ -175,7 +186,7 @@
                     <?php
                     }}else{ if (!$chat['is_img']) {?>
 					<p class="ltext border 
-					         rounded p-2 mb-1">
+					         rounded p-2 mb-1" style="word-wrap:break-word;">
 					    <?=$chat['msg']?> 
 					    <small class="d-block">
 					    	<?=$chat['created_at']?>
@@ -184,7 +195,7 @@
                     <?php } else {
                         ?>
 						<p class="ltext border 
-					         rounded p-2 mb-1">
+					         rounded p-2 mb-1" style="word-wrap:break-word;">
 						    <img style="padding: 10px 10px 10px 10px;" onclick="viewImage(this)" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($chat['img'])?>" width= "100%" object-fit = "contain"/>
 						    <small class="d-block">
 						    	<?=$chat['created_at']?>
@@ -198,9 +209,24 @@
             <textarea cols="3"
                       id = "message"
                       class="form-control"></textarea>
+
+            <!-- Send forms -->
+            <!-- is_admin == true -->
+            <div class="dropup scrollable">
+                <button style="min-height: 7vh; min-width: 6vh;" class="btn btn-light icon" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                    &#xf46d;
+                </button>
+                <ul class="dropdown-menu scrollable-menu w-400" aria-labelledby="dropdownMenu2">
+                    <input class="form-control" id="myInput" type="text" placeholder="Tên biểu mẫu..">
+                    <?php foreach ($forms as $form) {
+                        ?><li><button onclick="sendLink('<?php echo $form['link']; ?>')" class="dropdown-item" type="button"><?=$form["name"]?></button></li>
+                        <?php 
+                    };?>
+                </ul>
+            </div>
                       
-            <button class ="btn btn-light"
-                    id = "myBtn"><img src="img/upload.png" width="50"/>
+            <button class ="btn btn-light icon" style ="min-width: 6vh;"
+                    id = "myBtn">&#xf1c5;
             </button>
 
             <div id="myModal" class="modal">
@@ -242,7 +268,59 @@
         </div>
     </div>
 
+    <div id="solvedModal" class="modal">
+
+            <!-- Problem Solved Modal -->
+            <div class="modal-content">
+                <div class="wrapper">
+                    <h3 class="display-4 fs-1 text-center">
+                        Vấn đề đã được giải đáp?
+                    </h3>
+                        <ul class="scrollable-menu" aria-labelledby="dropdownMenu2">
+                            <input class="form-control" id="mySolution" type="text" placeholder="Tìm kiếm tên bài viết..">
+                            <?php foreach ($forms as $form) {
+                                ?><li><button onclick="sendName('<?php echo $form['name']; ?>')" class="dropdown-item" type="button"><?=$form["name"]?></button></li>
+                                <?php 
+                            };?>
+                        </ul>
+                    <button style="float:right;" id="solved" onclick="window.location='//localhost/dashboard/chat_package/admin_page.php'" class="btn btn-danger icon">&#xf104; Xác nhận</button>
+                </div>
+            </div>
+
+    </div>
+
     <script>
+        
+        // Send article name upon selection
+        function sendName(element){
+            console.log(element);
+            $.post("app/http/update_popular.php",
+                {
+                    name : element,
+                },
+                function(){})
+            window.location.href = "//localhost/dashboard/chat_package/admin_page.php";
+        }
+
+        // Search solution article name
+        $(document).ready(function(){
+            $("#mySolution").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+            });
+
+        // Search form name
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $(".dropdown-menu li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+            });
 
         var scrollDown = function(){
             let chatBox = document.getElementById('chatBox');
@@ -250,6 +328,22 @@
         }
 
         scrollDown();
+
+        // Send form upon selection
+        function sendLink(element){
+            console.log(element);
+            $.post("app/ajax/insert.php",
+                {
+                    message : element,
+                    room_id : <?=$_GET["room_id"]?>,
+                    from_id : <?=$_GET["user_id"]?>,
+                },
+                function(data, status){
+                    $("#message").val("");
+                    $("#chatBox").append(data);
+                    scrollDown();
+                })
+        }
 
         // Send message with ENTER
         var shift = false;
@@ -313,6 +407,12 @@
 
             // Get the image viewer
             var viewer = document.getElementById("imageViewer");
+            
+            // Get the solved modal
+            var solved = document.getElementById("solvedModal");
+
+            // Get the solved button
+            var solvedBtn = document.getElementById("solved");
 
             // Get the button that opens the modal
             var btn = document.getElementById("myBtn");
@@ -323,6 +423,11 @@
             // When the user clicks the button, open the modal 
             btn.onclick = function() {
             modal.style.display = "block";
+            }
+
+            // When the user clicks the button, open the solved modal 
+            solvedBtn.onclick = function() {
+            solved.style.display = "block";
             }
 
             // When the user clicks on <span> (x), close the modal
@@ -336,7 +441,9 @@
                     modal.style.display = "none";
                 } else if (event.target == viewer) {
                     viewer.style.display = "none";
-                } else;
+                } else if (event.target == solved) {
+                    solved.style.display = "none";
+                } else;;
             }
         
         // Pop up modal for image viewer
